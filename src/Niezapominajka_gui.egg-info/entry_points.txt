@@ -1,2 +1,0 @@
-[console_scripts]
-niezapominajka-gui = niezapominajka_gui.__main__:gui

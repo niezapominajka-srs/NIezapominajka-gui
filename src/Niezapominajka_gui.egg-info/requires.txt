@@ -1,2 +1,0 @@
-niezapominajka
-PyQt6
