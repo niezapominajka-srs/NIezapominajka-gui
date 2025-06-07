@@ -160,10 +160,14 @@ class DeckReview(QWidget):
         self.deal_a_card()
 
 
-def gui():
+def main():
     app = QApplication([])
     _window = MainWindow()
     app.exec()
 
 
 signal(SIGINT, SIG_DFL)
+
+
+if __name__ == '__main__':
+    main()
