@@ -12,7 +12,7 @@ classifiers = [
     "Programming Language :: Python :: 3"
 ]
 dependencies = [
-    "niezapominajka",
+    "niezapominajka>=0.0.2",
     "PyQt6"
 ]
 [tool.setuptools]
@@ -22,4 +22,4 @@ include-package-data = true
 where = ["src"]
 
 [project.scripts]
-niezapominajka-gui = "niezapominajka_gui.__main__:gui"
+niezapominajka-gui = "niezapominajka_gui.__main__:main"
