@@ -27,16 +27,16 @@ class Toolbar(QToolBar):
         ))
         icon = QIcon.fromTheme('go-home', fallback_icon)
         home.setIcon(icon)
-        home.clicked.connect(lambda: self.go_home(self.parent()))
+        home.clicked.connect(lambda: self.go_home())
         self.addWidget(home)
 
-    def go_home(self, parent):
+    def go_home(self):
         global _review_session
         if _review_session:
             _review_session.close_db()
             _review_session = None
 
-        parent.setCentralWidget(HomeScreen())
+        self.parent().setCentralWidget(HomeScreen())
 
 
 class MainWindow(QMainWindow):
