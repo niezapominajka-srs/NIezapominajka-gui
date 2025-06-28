@@ -22,8 +22,11 @@ class Toolbar(QToolBar):
         super().__init__()
 
         home = QPushButton()
-        icon = resources.files('niezapominajka_gui').joinpath('res', 'home.svg')
-        home.setIcon(QIcon(str(icon)))
+        fallback_icon = QIcon(str(
+            resources.files('niezapominajka_gui').joinpath('res', 'home.svg')
+        ))
+        icon = QIcon.fromTheme('go-home', fallback_icon)
+        home.setIcon(icon)
         home.clicked.connect(lambda: self.go_home(self.parent()))
         self.addWidget(home)
 
