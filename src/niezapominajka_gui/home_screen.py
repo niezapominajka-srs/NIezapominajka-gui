@@ -127,9 +127,9 @@ class HomeScreen(QWidget):
 
         layout.addWidget(self.deck_list_widget)
 
-        self.deck_list_widget.activated.connect(lambda: self.review_sig.emit(
-            self.model.data(self.deck_list_widget.currentIndex())[0]
-        ))
+        self.deck_list_widget.activated.connect(
+            lambda index: self.review_sig.emit(self.model.data(index)[0])
+        )
 
     def refresh(self):
         data = [(x['name'], x['num']) for x in review.get_deck_list()]
