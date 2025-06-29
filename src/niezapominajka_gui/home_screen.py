@@ -3,7 +3,7 @@
 # License: GNU GPL version 3 or later
 # Copyright (C) 2025 Wiktor Malinkiewicz
 
-from PyQt6.QtCore import Qt, QModelIndex, QAbstractListModel, QRect
+from PyQt6.QtCore import Qt, QModelIndex, QAbstractListModel, QRect, pyqtSignal
 from PyQt6.QtWidgets import (
     QVBoxLayout,
     QStyledItemDelegate,
@@ -13,7 +13,6 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtGui import QPen, QPalette
 
-from .deck_review import DeckReview
 from niezapominajka import review
 
 
@@ -21,6 +20,11 @@ class DeckListModel(QAbstractListModel):
     def __init__(self, data=None, parent=None):
         super().__init__(parent)
         self._data = data or []
+
+    def set_data(self, data):
+        self.beginResetModel()
+        self._data = data
+        self.endResetModel()
 
     def rowCount(self, parent=QModelIndex()):
         return len(self._data)
@@ -38,8 +42,12 @@ class DeckListModel(QAbstractListModel):
 class DeckListDelegate(QStyledItemDelegate):
     def __init__(self, deck_list_widget):
         super().__init__(deck_list_widget)
-        font_metrics = deck_list_widget.fontMetrics()
-        model = deck_list_widget.model()
+        self.deck_list_widget = deck_list_widget
+        self.recalculate_max_width()
+
+    def recalculate_max_width(self):
+        font_metrics = self.deck_list_widget.fontMetrics()
+        model = self.deck_list_widget.model()
         max_width = 0
         for i in range(model.rowCount()):
             data = model.data(model.index(i, 0), Qt.ItemDataRole.DisplayRole)
@@ -95,28 +103,33 @@ class DeckListDelegate(QStyledItemDelegate):
 
 
 class HomeScreen(QWidget):
+    review_sig = pyqtSignal(str)
+
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout(self)
         self.setLayout(layout)
 
-        data = [(x['name'], x['num']) for x in review.get_deck_list()]
-        self.model = DeckListModel(data)
-
         self.deck_list_widget = QListView()
-        self.deck_list_widget.setModel(self.model)
-        delegate = DeckListDelegate(self.deck_list_widget)
-        self.deck_list_widget.setItemDelegate(delegate)
         self.deck_list_widget.setAlternatingRowColors(True)
+        self.model = DeckListModel()
+
+        self.deck_list_widget.setModel(self.model)
+
+        self.delegate = DeckListDelegate(self.deck_list_widget)
+        self.deck_list_widget.setItemDelegate(self.delegate)
+        self.deck_list_widget.setCurrentIndex(self.model.index(0,0))
+
+        self.refresh()
 
         layout.addWidget(self.deck_list_widget)
-        self.deck_list_widget.clicked.connect(self.review_gui)
-        self.deck_list_widget.setCurrentIndex(self.model.index(0, 0))
 
-    def review_gui(self):
-        deck_name = self.model.data(self.deck_list_widget.currentIndex())[0]
-        self.parent().setCentralWidget(DeckReview(deck_name))
+        self.deck_list_widget.activated.connect(lambda: self.review_sig.emit(
+            self.model.data(self.deck_list_widget.currentIndex())[0]
+        ))
 
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key.Key_Return:
-            self.review_gui()
+    def refresh(self):
+        data = [(x['name'], x['num']) for x in review.get_deck_list()]
+        self.model.set_data(data)
+        self.delegate.recalculate_max_width()
+        self.deck_list_widget.setCurrentIndex(self.model.index(0,0))

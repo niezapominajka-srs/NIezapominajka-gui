@@ -18,12 +18,11 @@ from PyQt6.QtGui import (
 from niezapominajka import review
 
 
-_review_session = None
-
-
 class DeckReview(QWidget):
-    def __init__(self, deck_name):
+    def __init__(self):
         super().__init__()
+        self.session = None
+
         layout = QVBoxLayout()
         self.setLayout(layout)
 
@@ -51,9 +50,9 @@ class DeckReview(QWidget):
 
         self.answer_text = None
         self.question_text = None
-        global _review_session
-        _review_session = review.ReviewSession(deck_name)
 
+    def start_session(self, deck_name):
+        self.session = review.ReviewSession(deck_name)
         self.deal_a_card()
 
     def deal_a_card(self):
@@ -61,7 +60,7 @@ class DeckReview(QWidget):
         self.bad.hide()
         while True:
             try:
-                cards_content = _review_session.get_next_card()
+                cards_content = self.session.get_next_card()
                 if cards_content:
                     self.question_text = cards_content[0]
                     self.answer_text = cards_content[1]
@@ -89,6 +88,10 @@ class DeckReview(QWidget):
             self.good.show()
             self.bad.show()
 
+    def answered(self, score):
+        self.session.submit_score(score)
+        self.deal_a_card()
+
     def mouseReleaseEvent(self, _event):
         self.turn_the_card()
 
@@ -96,6 +99,6 @@ class DeckReview(QWidget):
         if event.key() == Qt.Key.Key_Return:
             self.turn_the_card()
 
-    def answered(self, score):
-        _review_session.submit_score(score)
-        self.deal_a_card()
+    def hideEvent(self, event):
+        if not event.spontaneous():
+            if self.session: self.session.close_db()
