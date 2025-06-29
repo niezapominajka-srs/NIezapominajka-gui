@@ -11,7 +11,7 @@ from PyQt6.QtWidgets import (
     QStyle,
     QListView
 )
-from PyQt6.QtGui import QPen, QPalette
+from PyQt6.QtGui import QPen, QPalette, QColor
 
 from niezapominajka import review
 
@@ -89,6 +89,10 @@ class DeckListDelegate(QStyledItemDelegate):
             painter.setPen(QPen(option.palette.color(QPalette.ColorRole.HighlightedText)))
         else:
             painter.setPen(QPen(option.palette.color(QPalette.ColorRole.WindowText)))
+        highlight = QColor(option.palette.highlight())
+        highlight.setAlpha(100)
+        if option.state & QStyle.StateFlag.State_MouseOver:
+            painter.fillRect(option.rect, highlight)
 
         painter.drawText(name_rect, Qt.AlignmentFlag.AlignCenter, name)
         if count != 0:
