@@ -54,13 +54,13 @@ class DeckListDelegate(QStyledItemDelegate):
             width = font_metrics.horizontalAdvance(data[0])
             if width > max_width: max_width = width
 
-        self.max_width = max_width + max_width // 10
+        self.max_width = int(max_width * 1.1)
 
     def paint(self, painter, option, index):
         name, count = index.data(Qt.ItemDataRole.DisplayRole)
         painter.save()
 
-        name_rect_width = min(self.max_width, option.rect.width() * 7 // 10)
+        name_rect_width = min(self.max_width, int(option.rect.width() * .7))
 
         name_rect = QRect(
             (option.rect.width() - name_rect_width) // 2,
