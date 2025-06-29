@@ -122,7 +122,6 @@ class HomeScreen(QWidget):
 
         self.delegate = DeckListDelegate(self.deck_list_widget)
         self.deck_list_widget.setItemDelegate(self.delegate)
-        self.deck_list_widget.setCurrentIndex(self.model.index(0,0))
 
         self.refresh()
 
