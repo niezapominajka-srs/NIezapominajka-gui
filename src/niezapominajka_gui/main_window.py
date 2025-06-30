@@ -55,9 +55,6 @@ class StackedWidget(QStackedWidget):
         self.home_screen.review_sig.connect(self.start_review)
 
     def go_home(self):
-        if self.deck_review.session:
-            self.deck_review.session.close_db()
-
         self.home_screen.refresh()
         self.setCurrentWidget(self.home_screen)
 
