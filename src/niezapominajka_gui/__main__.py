@@ -5,12 +5,13 @@ from .main_window import MainWindow
 
 
 def main():
+    signal(SIGINT, SIG_DFL)
+
     app = QApplication([])
     _window = MainWindow()
     app.exec()
 
 
-signal(SIGINT, SIG_DFL)
 
 if __name__ == '__main__':
     main()
