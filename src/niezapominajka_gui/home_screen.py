@@ -84,13 +84,14 @@ class DeckListDelegate(QStyledItemDelegate):
         painter.drawLine(name_rect.topRight(), name_rect.bottomRight())
         painter.drawLine(option.rect.bottomLeft(), option.rect.bottomRight())
 
+        highlight = QColor(option.palette.highlight())
+        highlight.setAlpha(180)
         if option.state & QStyle.StateFlag.State_Selected:
-            painter.fillRect(option.rect, option.palette.highlight())
+            painter.fillRect(option.rect, highlight)
             painter.setPen(QPen(option.palette.color(QPalette.ColorRole.HighlightedText)))
         else:
             painter.setPen(QPen(option.palette.color(QPalette.ColorRole.WindowText)))
-        highlight = QColor(option.palette.highlight())
-        highlight.setAlpha(100)
+        highlight.setAlpha(75)
         if option.state & QStyle.StateFlag.State_MouseOver:
             painter.fillRect(option.rect, highlight)
 
