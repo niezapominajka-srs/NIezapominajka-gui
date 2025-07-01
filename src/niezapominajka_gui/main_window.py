@@ -5,11 +5,10 @@
 
 from PyQt6.QtWidgets import (
     QMainWindow,
-    QPushButton,
-    QToolBar,
-    QStackedWidget
+    QStackedWidget,
+    QToolBar
 )
-from PyQt6.QtGui import QIcon
+from PyQt6.QtGui import QAction, QIcon
 from importlib import resources
 
 from .home_screen import HomeScreen
@@ -19,13 +18,13 @@ from .deck_review import DeckReview
 class Toolbar(QToolBar):
     def __init__(self):
         super().__init__()
-        self.home = QPushButton()
         fallback_icon = QIcon(str(
             resources.files('niezapominajka_gui').joinpath('res', 'home.svg')
         ))
         icon = QIcon.fromTheme('go-home', fallback_icon)
-        self.home.setIcon(icon)
-        self.addWidget(self.home)
+
+        self.go_home_actn = QAction(icon, 'home')
+        self.addAction(self.go_home_actn)
 
 
 class MainWindow(QMainWindow):
@@ -40,7 +39,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central_widget)
         self.show()
 
-        self.toolbar.home.clicked.connect(central_widget.go_home)
+        self.toolbar.go_home_actn.triggered.connect(central_widget.go_home)
 
 
 class StackedWidget(QStackedWidget):
