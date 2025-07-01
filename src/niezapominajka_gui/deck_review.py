@@ -40,13 +40,11 @@ class DeckReview(QWidget):
             x.setSizePolicy(size_policy)
             layout.addWidget(x)
 
-        shortcut = QShortcut(QKeySequence('g'), self)
-        shortcut.activated.connect(lambda: self.answered(1))
         self.good.clicked.connect(lambda: self.answered(1))
+        self.good.setShortcut(QKeySequence('g'))
 
-        shortcut = QShortcut(QKeySequence('b'), self)
-        shortcut.activated.connect(lambda: self.answered(0))
         self.bad.clicked.connect(lambda: self.answered(0))
+        self.bad.setShortcut(QKeySequence('b'))
 
         self.answer_text = None
         self.question_text = None
