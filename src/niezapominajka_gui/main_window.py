@@ -24,6 +24,7 @@ class Toolbar(QToolBar):
         icon = QIcon.fromTheme('go-home', fallback_icon)
 
         self.go_home_actn = QAction(icon, 'home')
+        self.go_home_actn.setToolTip('Go to homescreen')
         self.addAction(self.go_home_actn)
 
 
