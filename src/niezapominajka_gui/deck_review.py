@@ -116,7 +116,7 @@ class DeckReview(QWidget):
         self.deal_a_card()
 
     def keyPressEvent(self, event):
-        if event.key() == Qt.Key.Key_Return:
+        if event.key() == Qt.Key.Key_Space:
             self.turn_the_card()
 
     def hideEvent(self, event):
