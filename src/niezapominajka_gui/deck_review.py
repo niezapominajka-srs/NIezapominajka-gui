@@ -17,10 +17,10 @@ from niezapominajka import review
 
 
 class Card(QLabel):
-    clicked = pyqtSignal()
+    clicked_sig = pyqtSignal()
 
     def mouseReleaseEvent(self, event):
-        self.clicked.emit()
+        self.clicked_sig.emit()
 
 
 class Line(QFrame):
@@ -30,7 +30,7 @@ class Line(QFrame):
 
 
 class DeckReview(QWidget):
-    alert = pyqtSignal(str)
+    alert_sig = pyqtSignal(str)
 
     def __init__(self):
         super().__init__()
@@ -51,7 +51,7 @@ class DeckReview(QWidget):
         # with text is clickable
         self.card_widget.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.card_widget.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
-        self.card_widget.clicked.connect(self.turn_the_card)
+        self.card_widget.clicked_sig.connect(self.turn_the_card)
         layout.addWidget(self.card_widget, 1)
 
         layout.addWidget(Line())
@@ -96,7 +96,7 @@ class DeckReview(QWidget):
                 self.question_text = None
                 self.q_or_ans_label.setText('')
         except FileNotFoundError:
-            self.alert.emit("Aborted. A card wasn't found, even though it existed when cards for review were being assembled")
+            self.alert_sig.emit("Aborted. A card wasn't found, even though it existed when cards for review were being assembled")
 
     def turn_the_card(self):
         if self.answer_text is not None:

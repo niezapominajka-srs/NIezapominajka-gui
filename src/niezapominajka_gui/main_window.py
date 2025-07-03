@@ -58,7 +58,7 @@ class MainWindow(QMainWindow):
         self.show()
 
         self.toolbar.go_home_actn.triggered.connect(central_widget.go_home)
-        central_widget.alert.connect(self.show_status_bar)
+        central_widget.alert_sig.connect(self.show_status_bar)
 
     def show_status_bar(self, text):
         self.status_bar.set_status(text)
@@ -66,7 +66,7 @@ class MainWindow(QMainWindow):
 
 
 class StackedWidget(QStackedWidget):
-    alert = pyqtSignal(str)
+    alert_sig = pyqtSignal(str)
 
     def __init__(self):
         super().__init__()
@@ -77,10 +77,10 @@ class StackedWidget(QStackedWidget):
         self.addWidget(self.deck_review)
 
         self.home_screen.review_sig.connect(self.start_review)
-        self.deck_review.alert.connect(self.abort_review)
+        self.deck_review.alert_sig.connect(self.abort_review)
 
     def abort_review(self, text):
-        self.alert.emit(text)
+        self.alert_sig.emit(text)
         QTimer.singleShot(0, self.go_home)
 
     def go_home(self):
