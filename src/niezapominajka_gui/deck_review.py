@@ -5,6 +5,7 @@
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import (
+    QFrame,
     QLabel,
     QPushButton,
     QVBoxLayout,
@@ -22,21 +23,38 @@ class Card(QLabel):
         self.clicked.emit()
 
 
+class Line(QFrame):
+    def __init__(self):
+        super().__init__()
+        self.setFrameShape(QFrame.Shape.HLine)
+
+
 class DeckReview(QWidget):
     alert = pyqtSignal(str)
 
     def __init__(self):
         super().__init__()
         self.session = None
+        self.is_question = None
 
         layout = QVBoxLayout()
         self.setLayout(layout)
 
+        self.q_or_ans_label = QLabel()
+        layout.addWidget(self.q_or_ans_label, 0, Qt.AlignmentFlag.AlignCenter)
+
+        layout.addWidget(Line())
+
         self.card_widget = Card()
+        # alignment must be set here not in the addWidget() cause
+        # some weird shit happens then and only the part of the card_widget
+        # with text is clickable
         self.card_widget.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.card_widget.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.card_widget.clicked.connect(self.turn_the_card)
-        layout.addWidget(self.card_widget)
+        layout.addWidget(self.card_widget, 1)
+
+        layout.addWidget(Line())
 
         self.good = QPushButton('(g)ood')
         self.bad = QPushButton('(b)ad')
@@ -70,11 +88,13 @@ class DeckReview(QWidget):
                 self.answer_text = cards_content[1]
                 self.card_widget.setText(self.question_text)
                 self.is_question = True
+                self.q_or_ans_label.setText('question')
             else:
                 self.card_widget.setText('Empty deck :)')
                 self.card_widget.setFocusPolicy(Qt.FocusPolicy.NoFocus)
                 self.answer_text = None
                 self.question_text = None
+                self.q_or_ans_label.setText('')
         except FileNotFoundError:
             self.alert.emit("Aborted. A card wasn't found, even though it existed when cards for review were being assembled")
 
@@ -83,9 +103,11 @@ class DeckReview(QWidget):
             if self.is_question:
                 self.card_widget.setText(self.answer_text)
                 self.is_question = False
+                self.q_or_ans_label.setText('answer')
             else:
                 self.card_widget.setText(self.question_text)
                 self.is_question = True
+                self.q_or_ans_label.setText('question')
             self.good.show()
             self.bad.show()
 
