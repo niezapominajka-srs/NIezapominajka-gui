@@ -3,22 +3,28 @@
 # License: GNU GPL version 3 or later
 # Copyright (C) 2025 Wiktor Malinkiewicz
 
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import (
     QLabel,
     QPushButton,
     QVBoxLayout,
     QWidget
 )
-from PyQt6.QtGui import (
-    QKeySequence,
-    QShortcut
-)
+from PyQt6.QtGui import QKeySequence
 
 from niezapominajka import review
 
 
+class Card(QLabel):
+    clicked = pyqtSignal()
+
+    def mouseReleaseEvent(self, event):
+        self.clicked.emit()
+
+
 class DeckReview(QWidget):
+    alert = pyqtSignal(str)
+
     def __init__(self):
         super().__init__()
         self.session = None
@@ -26,9 +32,10 @@ class DeckReview(QWidget):
         layout = QVBoxLayout()
         self.setLayout(layout)
 
-        self.card_widget = QLabel()
+        self.card_widget = Card()
         self.card_widget.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.card_widget.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        self.card_widget.clicked.connect(self.turn_the_card)
         layout.addWidget(self.card_widget)
 
         self.good = QPushButton('(g)ood')
@@ -56,24 +63,20 @@ class DeckReview(QWidget):
     def deal_a_card(self):
         self.good.hide()
         self.bad.hide()
-        while True:
-            try:
-                cards_content = self.session.get_next_card()
-                if cards_content:
-                    self.question_text = cards_content[0]
-                    self.answer_text = cards_content[1]
-                    self.card_widget.setText(self.question_text)
-                    self.is_question = True
-                    break
-                else:
-                    self.card_widget.setText('Empty deck :)')
-                    self.card_widget.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-                    self.answer_text = None
-                    self.question_text = None
-                    break
-            except FileNotFoundError:
-                # todo: popup?
-                continue
+        try:
+            cards_content = self.session.get_next_card()
+            if cards_content:
+                self.question_text = cards_content[0]
+                self.answer_text = cards_content[1]
+                self.card_widget.setText(self.question_text)
+                self.is_question = True
+            else:
+                self.card_widget.setText('Empty deck :)')
+                self.card_widget.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+                self.answer_text = None
+                self.question_text = None
+        except FileNotFoundError:
+            self.alert.emit("Aborted. A card wasn't found, even though it existed when cards for review were being assembled")
 
     def turn_the_card(self):
         if self.answer_text is not None:
@@ -89,9 +92,6 @@ class DeckReview(QWidget):
     def answered(self, score):
         self.session.submit_score(score)
         self.deal_a_card()
-
-    def mouseReleaseEvent(self, _event):
-        self.turn_the_card()
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key.Key_Return:
