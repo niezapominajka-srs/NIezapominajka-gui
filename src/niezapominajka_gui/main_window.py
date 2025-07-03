@@ -31,7 +31,7 @@ class Toolbar(QToolBar):
         self.addAction(self.go_home_actn)
 
 
-class StatusBar(QDockWidget):
+class NotificationBar(QDockWidget):
     def __init__(self):
         super().__init__()
         self.status = QLabel()
@@ -46,7 +46,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Niezapominajka')
-        self.status_bar = StatusBar()
+        self.status_bar = NotificationBar()
         self.status_bar.hide()
         self.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, self.status_bar)
 
