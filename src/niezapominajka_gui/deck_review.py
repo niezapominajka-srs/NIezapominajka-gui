@@ -56,20 +56,19 @@ class DeckReview(QWidget):
 
         layout.addWidget(Line())
 
-        self.good = QPushButton('(g)ood')
-        self.bad = QPushButton('(b)ad')
-        buttons = (self.good, self.bad)
-        for x in buttons:
+        self.easy = QPushButton('(e)asy')
+        self.hard = QPushButton('(h)ard')
+        for x in (self.easy, self.hard):
             size_policy = x.sizePolicy()
             size_policy.setRetainSizeWhenHidden(True)
             x.setSizePolicy(size_policy)
             layout.addWidget(x)
 
-        self.good.clicked.connect(lambda: self.answered(1))
-        self.good.setShortcut(QKeySequence('g'))
+        self.easy.clicked.connect(lambda: self.answered(1))
+        self.easy.setShortcut(QKeySequence('e'))
 
-        self.bad.clicked.connect(lambda: self.answered(0))
-        self.bad.setShortcut(QKeySequence('b'))
+        self.hard.clicked.connect(lambda: self.answered(0))
+        self.hard.setShortcut(QKeySequence('h'))
 
         self.answer_text = None
         self.question_text = None
@@ -79,8 +78,8 @@ class DeckReview(QWidget):
         self.deal_a_card()
 
     def deal_a_card(self):
-        self.good.hide()
-        self.bad.hide()
+        self.easy.hide()
+        self.hard.hide()
         try:
             cards_content = self.session.get_next_card()
             if cards_content:
@@ -108,8 +107,8 @@ class DeckReview(QWidget):
                 self.card_widget.setText(self.question_text)
                 self.is_question = True
                 self.q_or_ans_label.setText('question')
-            self.good.show()
-            self.bad.show()
+            self.easy.show()
+            self.hard.show()
 
     def answered(self, score):
         self.session.submit_score(score)
