@@ -112,6 +112,8 @@ class HomeScreen(QWidget):
 
     def __init__(self):
         super().__init__()
+        self.cached_data = None
+
         layout = QVBoxLayout(self)
         self.setLayout(layout)
 
@@ -134,6 +136,8 @@ class HomeScreen(QWidget):
 
     def refresh(self):
         data = [(x['name'], x['num']) for x in review.get_deck_list()]
-        self.model.set_data(data)
-        self.delegate.recalculate_max_width()
-        self.deck_list_widget.setCurrentIndex(self.model.index(0,0))
+        if self.cached_data != data:
+            self.model.set_data(data)
+            self.delegate.recalculate_max_width()
+            self.deck_list_widget.setCurrentIndex(self.model.index(0,0))
+            self.cached_data = data
