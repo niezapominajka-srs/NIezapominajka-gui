@@ -55,10 +55,11 @@ class MainWindow(QMainWindow):
 
         self.addToolBar(self.toolbar)
         self.setCentralWidget(central_widget)
-        self.show()
 
         self.toolbar.go_home_actn.triggered.connect(central_widget.go_home)
         central_widget.alert_sig.connect(self.show_status_bar)
+
+        self.show()
 
     def show_status_bar(self, text):
         self.status_bar.set_status(text)
