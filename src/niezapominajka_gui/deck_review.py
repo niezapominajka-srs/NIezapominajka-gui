@@ -114,10 +114,9 @@ class DeckReview(QWidget):
         self.session.submit_score(score)
         self.deal_a_card()
 
+    def cleanup_session(self):
+        if self.session: self.session.close_db()
+
     def keyPressEvent(self, event):
         if event.key() == Qt.Key.Key_Space:
             self.turn_the_card()
-
-    def hideEvent(self, event):
-        if not event.spontaneous():
-            if self.session: self.session.close_db()

@@ -85,6 +85,8 @@ class StackedWidget(QStackedWidget):
 
     def go_home(self):
         self.home_screen.refresh()
+        if self.currentWidget() == self.deck_review:
+            self.deck_review.cleanup_session()
         self.setCurrentWidget(self.home_screen)
 
     def start_review(self, deck_name):
