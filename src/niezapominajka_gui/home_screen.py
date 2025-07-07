@@ -30,11 +30,16 @@ class DeckListModel(QAbstractListModel):
         return len(self._data)
 
     def data(self, index, role=Qt.ItemDataRole.DisplayRole):
+        row = self._data[index.row()]
+
         if not index.isValid() or not (0 <= index.row() < len(self._data)):
             return None
 
+        if role == Qt.ItemDataRole.AccessibleTextRole:
+            return f'{row[0]}, {row[1]} cards'
+
         if role == Qt.ItemDataRole.DisplayRole:
-            return self._data[index.row()]
+            return row
 
         return None
 
