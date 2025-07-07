@@ -10,7 +10,7 @@ from PyQt6.QtWidgets import (
     QStackedWidget,
     QToolBar
 )
-from PyQt6.QtGui import QAction, QIcon
+from PyQt6.QtGui import QAction, QIcon, QKeySequence
 from importlib import resources
 from PyQt6.QtCore import QTimer, pyqtSignal, Qt
 
@@ -27,6 +27,7 @@ class Toolbar(QToolBar):
         icon = QIcon.fromTheme('go-home', fallback_icon)
 
         self.go_home_actn = QAction(icon, 'home')
+        self.go_home_actn.setShortcut(QKeySequence('Alt+h'))
         self.go_home_actn.setToolTip('Go to homescreen')
         self.addAction(self.go_home_actn)
 
