@@ -57,7 +57,9 @@ class DeckReview(QWidget):
         layout.addWidget(Line())
 
         self.easy = QPushButton('(e)asy')
+        self.easy.setAccessibleName('easy')
         self.hard = QPushButton('(h)ard')
+        self.hard.setAccessibleName('hard')
         for x in (self.easy, self.hard):
             size_policy = x.sizePolicy()
             size_policy.setRetainSizeWhenHidden(True)
