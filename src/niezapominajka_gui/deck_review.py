@@ -103,12 +103,11 @@ class DeckReview(QWidget):
         if self.answer_text is not None:
             if self.is_question:
                 self.card_widget.setText(self.answer_text)
-                self.is_question = False
                 self.q_or_ans_label.setText('answer')
             else:
                 self.card_widget.setText(self.question_text)
-                self.is_question = True
                 self.q_or_ans_label.setText('question')
+            self.is_question = not self.is_question
             self.easy.show()
             self.hard.show()
 
