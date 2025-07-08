@@ -9,7 +9,8 @@ from PySide6.QtWidgets import (
     QStyledItemDelegate,
     QWidget,
     QStyle,
-    QListView
+    QListView,
+    QLabel
 )
 from PySide6.QtGui import QPen, QPalette
 
@@ -118,6 +119,9 @@ class HomeScreen(QWidget):
     def __init__(self):
         super().__init__()
         self.cached_data = None
+        self.empty_decklist_label = QLabel('No decks :(')
+        self.empty_decklist_label.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        self.empty_decklist_label.hide()
 
         layout = QVBoxLayout(self)
         self.setLayout(layout)
@@ -133,6 +137,7 @@ class HomeScreen(QWidget):
 
         self.refresh()
 
+        layout.addWidget(self.empty_decklist_label, 0, Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.deck_list_widget)
 
         self.deck_list_widget.activated.connect(
@@ -141,6 +146,11 @@ class HomeScreen(QWidget):
 
     def refresh(self):
         data = [(x['name'], x['num']) for x in review.get_deck_list()]
+        if data: self.empty_decklist_label.hide()
+        else:
+            self.empty_decklist_label.show()
+            self.empty_decklist_label.setFocus()
+
         if self.cached_data != data:
             self.model.set_data(data)
             self.delegate.recalculate_max_width()
