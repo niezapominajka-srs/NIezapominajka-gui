@@ -83,7 +83,6 @@ class DeckReview(QWidget):
                 self.q_or_ans_label.setText('question')
             else:
                 self.card_widget.setText('Empty deck :)')
-                self.card_widget.setFocusPolicy(Qt.FocusPolicy.NoFocus)
                 self.answer_text = None
                 self.question_text = None
                 self.q_or_ans_label.setText('')
