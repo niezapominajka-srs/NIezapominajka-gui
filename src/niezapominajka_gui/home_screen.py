@@ -3,15 +3,15 @@
 # License: GNU GPL version 3 or later
 # Copyright (C) 2025 Wiktor Malinkiewicz
 
-from PyQt6.QtCore import Qt, QModelIndex, QAbstractListModel, QRect, pyqtSignal
-from PyQt6.QtWidgets import (
+from PySide6.QtCore import Qt, QModelIndex, QAbstractListModel, QRect, Signal as qtSignal
+from PySide6.QtWidgets import (
     QVBoxLayout,
     QStyledItemDelegate,
     QWidget,
     QStyle,
     QListView
 )
-from PyQt6.QtGui import QPen, QPalette, QColor
+from PySide6.QtGui import QPen, QPalette
 
 from niezapominajka import review
 
@@ -89,7 +89,7 @@ class DeckListDelegate(QStyledItemDelegate):
         painter.drawLine(name_rect.topRight(), name_rect.bottomRight())
         painter.drawLine(option.rect.bottomLeft(), option.rect.bottomRight())
 
-        highlight = QColor(option.palette.highlight())
+        highlight = option.palette.highlight().color()
         highlight.setAlpha(180)
         if option.state & QStyle.StateFlag.State_Selected:
             painter.fillRect(option.rect, highlight)
@@ -113,7 +113,7 @@ class DeckListDelegate(QStyledItemDelegate):
 
 
 class HomeScreen(QWidget):
-    review_sig = pyqtSignal(str)
+    review_sig = qtSignal(str)
 
     def __init__(self):
         super().__init__()

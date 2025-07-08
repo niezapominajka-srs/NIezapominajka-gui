@@ -3,16 +3,16 @@
 # License: GNU GPL version 3 or later
 # Copyright (C) 2025 Wiktor Malinkiewicz
 
-from PyQt6.QtWidgets import (
+from PySide6.QtWidgets import (
     QDockWidget,
     QLabel,
     QMainWindow,
     QStackedWidget,
     QToolBar
 )
-from PyQt6.QtGui import QAction, QIcon, QKeySequence
+from PySide6.QtGui import QAction, QIcon, QKeySequence
 from importlib import resources
-from PyQt6.QtCore import QTimer, pyqtSignal, Qt
+from PySide6.QtCore import QTimer, Qt, Signal as qtSignal
 
 from .home_screen import HomeScreen
 from .deck_review import DeckReview
@@ -68,7 +68,7 @@ class MainWindow(QMainWindow):
 
 
 class StackedWidget(QStackedWidget):
-    alert_sig = pyqtSignal(str)
+    alert_sig = qtSignal(str)
 
     def __init__(self):
         super().__init__()

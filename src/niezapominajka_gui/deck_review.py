@@ -3,21 +3,21 @@
 # License: GNU GPL version 3 or later
 # Copyright (C) 2025 Wiktor Malinkiewicz
 
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtWidgets import (
+from PySide6.QtCore import Qt, Signal as qtSignal
+from PySide6.QtWidgets import (
     QFrame,
     QLabel,
     QPushButton,
     QVBoxLayout,
     QWidget
 )
-from PyQt6.QtGui import QKeySequence
+from PySide6.QtGui import QKeySequence
 
 from niezapominajka import review
 
 
 class Card(QLabel):
-    clicked_sig = pyqtSignal()
+    clicked_sig = qtSignal()
 
     def mouseReleaseEvent(self, event):
         self.clicked_sig.emit()
@@ -30,7 +30,7 @@ class Line(QFrame):
 
 
 class DeckReview(QWidget):
-    alert_sig = pyqtSignal(str)
+    alert_sig = qtSignal(str)
 
     def __init__(self):
         super().__init__()
