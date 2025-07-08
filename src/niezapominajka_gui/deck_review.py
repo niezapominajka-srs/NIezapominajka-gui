@@ -46,9 +46,6 @@ class DeckReview(QWidget):
         layout.addWidget(Line())
 
         self.card_widget = Card()
-        # alignment must be set here not in the addWidget() cause
-        # some weird shit happens then and only the part of the card_widget
-        # with text is clickable
         self.card_widget.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.card_widget.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.card_widget.clicked_sig.connect(self.turn_the_card)
