@@ -13,7 +13,7 @@ classifiers = [
 ]
 dependencies = [
     "niezapominajka>=0.0.2",
-    "PyQt6"
+    "PySide6"
 ]
 [tool.setuptools]
 include-package-data = true
