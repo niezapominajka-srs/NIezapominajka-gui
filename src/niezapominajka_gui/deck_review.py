@@ -23,12 +23,6 @@ class Card(QLabel):
         self.clicked_sig.emit()
 
 
-class Line(QFrame):
-    def __init__(self):
-        super().__init__()
-        self.setFrameShape(QFrame.Shape.HLine)
-
-
 class DeckReview(QWidget):
     alert_sig = qtSignal(str)
 
@@ -43,7 +37,7 @@ class DeckReview(QWidget):
         self.q_or_ans_label = QLabel()
         layout.addWidget(self.q_or_ans_label, 0, Qt.AlignmentFlag.AlignCenter)
 
-        layout.addWidget(Line())
+        layout.addWidget(DeckReview.create_line())
 
         self.card_widget = Card()
         self.card_widget.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -51,7 +45,7 @@ class DeckReview(QWidget):
         self.card_widget.clicked_sig.connect(self.turn_the_card)
         layout.addWidget(self.card_widget, 1)
 
-        layout.addWidget(Line())
+        layout.addWidget(DeckReview.create_line())
 
         self.easy = QPushButton('(e)asy')
         self.easy.setAccessibleName('easy')
@@ -118,3 +112,9 @@ class DeckReview(QWidget):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key.Key_Space:
             self.turn_the_card()
+
+    @staticmethod
+    def create_line():
+        line = QFrame()
+        line.setFrameShape(QFrame.Shape.HLine)
+        return line
