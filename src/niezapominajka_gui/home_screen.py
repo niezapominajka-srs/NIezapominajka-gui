@@ -18,6 +18,9 @@ from niezapominajka import review
 
 
 class DeckListModel(QAbstractListModel):
+    DeckNameRole = Qt.ItemDataRole.UserRole + 1
+    CardCountRole = Qt.ItemDataRole.UserRole + 2
+
     def __init__(self, data=None, parent=None):
         super().__init__(parent)
         self._data = data or []
@@ -39,8 +42,11 @@ class DeckListModel(QAbstractListModel):
         if role == Qt.ItemDataRole.AccessibleTextRole:
             return f'{row[0]}, {row[1]} cards'
 
-        if role == Qt.ItemDataRole.DisplayRole:
-            return row
+        if role == self.DeckNameRole:
+            return row[0]
+
+        if role == self.CardCountRole:
+            return row[1]
 
         return None
 
@@ -56,14 +62,15 @@ class DeckListDelegate(QStyledItemDelegate):
         model = self.deck_list_widget.model()
         max_width = 0
         for i in range(model.rowCount()):
-            data = model.data(model.index(i, 0), Qt.ItemDataRole.DisplayRole)
-            width = font_metrics.horizontalAdvance(data[0])
+            deck_name = model.data(model.index(i, 0), DeckListModel.DeckNameRole)
+            width = font_metrics.horizontalAdvance(deck_name)
             if width > max_width: max_width = width
 
         self.max_width = int(max_width * 1.1)
 
     def paint(self, painter, option, index):
-        name, count = index.data(Qt.ItemDataRole.DisplayRole)
+        name = index.data(DeckListModel.DeckNameRole)
+        count = index.data(DeckListModel.CardCountRole)
         painter.save()
 
         name_rect_width = min(self.max_width, int(option.rect.width() * .7))
@@ -141,7 +148,7 @@ class HomeScreen(QWidget):
         layout.addWidget(self.deck_list_widget)
 
         self.deck_list_widget.activated.connect(
-            lambda index: self.review_sig.emit(self.model.data(index)[0])
+            lambda index: self.review_sig.emit(self.model.data(index, DeckListModel.DeckNameRole))
         )
 
     def refresh(self):
