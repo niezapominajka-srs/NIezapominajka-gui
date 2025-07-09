@@ -13,7 +13,8 @@ def main():
     signal(SIGINT, SIG_DFL)
 
     app = QApplication([])
-    _window = MainWindow()
+    window = MainWindow()
+    window.show()
     app.exec()
 
 
