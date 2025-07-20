@@ -13,7 +13,6 @@ from PySide6.QtWidgets import (
     QLabel
 )
 from PySide6.QtGui import QPen, QPalette
-
 from niezapominajka import review
 
 
@@ -90,27 +89,32 @@ class DeckListDelegate(QStyledItemDelegate):
             option.rect.height()
         )
 
+        highlight_selection = option.palette.highlight().color()
+        highlight_selection.setAlpha(180)
+        highlight_hover = option.palette.highlight().color()
+        highlight_hover.setAlpha(90)
+
+        if option.state & QStyle.StateFlag.State_Selected:
+            painter.fillRect(option.rect, highlight_selection)
+            painter.setPen(QPen(option.palette.color(QPalette.ColorRole.HighlightedText)))
+        else:
+            painter.setPen(QPen(option.palette.color(QPalette.ColorRole.WindowText)))
+        if option.state & QStyle.StateFlag.State_MouseOver and count != 0:
+            painter.fillRect(option.rect, highlight_hover)
+
+        if count == 0:
+            text_color = painter.pen().color()
+            text_color.setAlpha(140)
+            painter.setPen(QPen(text_color))
+        painter.drawText(count_rect, Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, str(count))
+        painter.drawText(name_rect, Qt.AlignmentFlag.AlignCenter, name)
+
         pen = QPen(option.palette.color(QPalette.ColorRole.Accent))
         pen.setWidthF(0.5)
         painter.setPen(pen)
         painter.drawLine(name_rect.topLeft(), name_rect.bottomLeft())
         painter.drawLine(name_rect.topRight(), name_rect.bottomRight())
         painter.drawLine(option.rect.bottomLeft(), option.rect.bottomRight())
-
-        highlight = option.palette.highlight().color()
-        highlight.setAlpha(180)
-        if option.state & QStyle.StateFlag.State_Selected:
-            painter.fillRect(option.rect, highlight)
-            painter.setPen(QPen(option.palette.color(QPalette.ColorRole.HighlightedText)))
-        else:
-            painter.setPen(QPen(option.palette.color(QPalette.ColorRole.WindowText)))
-        highlight.setAlpha(75)
-        if option.state & QStyle.StateFlag.State_MouseOver:
-            painter.fillRect(option.rect, highlight)
-
-        painter.drawText(name_rect, Qt.AlignmentFlag.AlignCenter, name)
-        if count != 0:
-            painter.drawText(count_rect, Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, str(count))
 
         painter.restore()
 
