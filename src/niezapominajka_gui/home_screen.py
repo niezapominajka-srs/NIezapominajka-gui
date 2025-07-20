@@ -65,14 +65,15 @@ class DeckListDelegate(QStyledItemDelegate):
             width = font_metrics.horizontalAdvance(deck_name)
             if width > max_width: max_width = width
 
-        self.max_width = int(max_width * 1.1)
+        self.name_required_width = int(max_width * 1.1)
 
     def paint(self, painter, option, index):
         name = index.data(DeckListModel.DeckNameRole)
         count = index.data(DeckListModel.CardCountRole)
         painter.save()
 
-        name_rect_width = min(self.max_width, int(option.rect.width() * .7))
+        NAME_RECT_MAX_WIDTH = option.rect.width() * .7
+        name_rect_width = min(self.name_required_width, NAME_RECT_MAX_WIDTH)
 
         name_rect = QRect(
             (option.rect.width() - name_rect_width) // 2,
@@ -81,11 +82,11 @@ class DeckListDelegate(QStyledItemDelegate):
             option.rect.height()
         )
 
-        padding = option.rect.width() // 50
+        PADDING = option.rect.width() // 50
         count_rect = QRect(
-            name_rect.right() + padding,
+            name_rect.right() + PADDING,
             option.rect.y(),
-            option.rect.width() - name_rect.right() - padding,
+            option.rect.width() - name_rect.right() - PADDING,
             option.rect.height()
         )
 
