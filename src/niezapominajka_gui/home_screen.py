@@ -61,7 +61,7 @@ class DeckListDelegate(QStyledItemDelegate):
         model = self.deck_list_widget.model()
         max_width = 0
         for i in range(model.rowCount()):
-            deck_name = model.data(model.index(i, 0), DeckListModel.DeckNameRole)
+            deck_name = model.data(model.index(i), DeckListModel.DeckNameRole)
             width = font_metrics.horizontalAdvance(deck_name)
             if width > max_width: max_width = width
 
@@ -166,5 +166,5 @@ class HomeScreen(QWidget):
         if self.cached_data != data:
             self.model.set_data(data)
             self.delegate.recalculate_max_width()
-            self.deck_list_widget.setCurrentIndex(self.model.index(0,0))
+            self.deck_list_widget.setCurrentIndex(self.model.index(0))
             self.cached_data = data
